@@ -7,7 +7,7 @@ robot vacuum tiles on one page of the compact grid](demo-page.jpg)
 
 This is a proof of concept for the Guition JC4827W543 board (4.3-inch 480x272 IPS panel on an
 NV3041A over QSPI, GT911 capacitive touch, ESP32-S3 with 4 MB of flash and 8 MB of octal PSRAM)
-in the ESP Screens (Tessera) project. The board is defined in Tessera's parts style, built on
+in [ESP Screens (Tessera)](https://github.com/MaxGramser/homeassistant_espscreen). The board is defined in Tessera's parts style, built on
 ESPHome 2026.10.2, and verified on the glass: pages load, tiles respond, the touch matches the
 picture, and over-the-air updates run on an encrypted key. The definitions here are meant to be
 taken into the Tessera project, and anyone is welcome to pick them up for that.
