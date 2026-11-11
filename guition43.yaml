@@ -1,0 +1,64 @@
+# Guition JC4827W543 (4.3 inch, 480 x 272) - local profile for a running Tessera instance.
+# The board lives next to this file under tessera-board/ (packages, components, fonts), so nothing is fetched
+# from GitHub: ESPHome resolves the local packages, the local components and the fonts relative to this folder.
+#
+# Fill in the one key before the first build (this screen's unique secret, 32 random bytes base64):
+#   python3 -c "import base64,os;print(base64.b64encode(os.urandom(32)).decode())"
+# It guards the API, and the OTA block below inherits it (`encryption:` without a key), so one key serves both.
+substitutions:
+  DEVICE_NAME: "guition43"
+  DEVICE_FRIENDLY_NAME: "Guition 4.3"
+  # The screen's own texts (the tile texts come from your entities). de, en, nl, fr, ... exist.
+  LANGUAGE: "de"
+  SWIPE_PAGES_DEFAULT: "1"
+  # The fonts of the shared UI, local: ESPHome looks relative to the profile's folder.
+  FONT_DIR: "tessera-board/fonts"
+
+  # Flash trims for the 4 MB slot (first build measured 2,162,559 bytes, 131 KB over the 2,031,616-byte slot):
+  # the icon fonts at 2 bpp instead of 4 (the compact look's own trick, ~143 KB of .rodata) and the bedside clock
+  # drawing with the display step (as the CYD states it, ~40 KB).
+  FONT_ICON_BPP: 2
+  BEDSIDE_OWN_DIGITS: "0"
+
+esphome:
+  name: "guition43"
+  friendly_name: "Guition 4.3"
+
+packages:
+  # The shared UI of every board, and this board's hardware and sizes, local copies of the board's files.
+  core: !include tessera-board/packages/core.yaml
+  board: !include tessera-board/packages/boards/jc4827w543.yaml
+
+external_components:
+  - source:
+      type: local
+      path: tessera-board/components
+    components: [flash_layout, smart_display]
+
+# The firmware at its smallest: -Os instead of -O3. The second build measured 2,035,099 bytes and
+# missed the 2,031,616-byte slot by 3,600; at ~5-10% smaller code this lands at ~93-97 % of the slot.
+# sdkconfig_options sits directly under framework:, next to advanced:, not inside it (ESPHome 2026.10).
+esp32:
+  framework:
+    sdkconfig_options:
+      CONFIG_COMPILER_OPTIMIZATION_SIZE: "y"
+
+api:
+  encryption:
+    key: "REPLACE_WITH_API_KEY_BASE64"
+ota:
+  - platform: esphome
+    # A bare `encryption:` inherits the API key above (ESPHome 2026.9+): one key guards API and OTA,
+    # and the key never sits twice in the build. A key of its own would be `encryption: {key: "..."}`.
+    encryption:
+    # The board has 4 MB of flash and builds for the wide partition table: this line is what later lets
+    # ESPHome replace a table over Wi-Fi (the screen is flashed with the wide table from the start).
+    allow_partition_access: true
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # Mains-powered panel: no modem sleep, so HA updates and OTA arrive without beacon latency.
+  power_save_mode: none
+  # No ap:/captive_portal: a 4 MB board carries no Wi-Fi fallback hotspot. A screen whose Wi-Fi changed
+  # is installed again over USB (docs/EASY_SETUP.md).
