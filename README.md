@@ -1,4 +1,4 @@
-# Tessera for jc4827w543
+# tessera for jc4827w543
 
 ![The Guition JC4827W543 running the demo page: clock, thermostat, cover, media player, light and
 robot vacuum tiles on one page of the compact grid](demo-page.jpg)
