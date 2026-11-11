@@ -1,5 +1,8 @@
 # Tessera for jc4827w543
 
+![The Guition JC4827W543 running the demo page: clock, thermostat, cover, media player, light and
+robot vacuum tiles on one page of the compact grid](demo-page.jpg)
+
 ## Introduction
 
 This is a proof of concept for the Guition JC4827W543 board (4.3-inch 480x272 IPS panel on an
@@ -73,3 +76,11 @@ These are the limits of a 4 MB board on the lite tier, as they stand in this fir
   an unknown board and draws its layout from what the screen itself reports. Copying the
   `boards.json` in this repo over the add-on's copy fills the catalogue in a running install; that
   copy is lost on an app update, which is fine once the release carries the board.
+
+## Disclaimer
+
+This README, the board and hardware definitions and the working notes were written with the help
+of GLM-5.3, a large language model. Every step was then reviewed by a human and tested: the
+firmware was built, flashed and checked on the glass, and the hardware facts behind the
+definitions were verified against the ESPHome sources. Still review anything you are about to
+flash.
